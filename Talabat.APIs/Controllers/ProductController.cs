@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Talabat.APIs.Dtos;
+using Talabat.APIs.Errors;
 using Talabat.Core.Entities;
 using Talabat.Core.Repostries.Contract;
+using Talabat.Core.Spacifications;
+using Talabat.Core.Spacifications.Product_Spacifications;
 
 namespace Talabat.APIs.Controllers
 {  
@@ -9,28 +14,34 @@ namespace Talabat.APIs.Controllers
     {
 
         private readonly IGenaricRepo<Product> _ProdRepo;
+        private readonly IMapper _Mapper;    
 
-        public ProductController(IGenaricRepo<Product> Prod_Repo ) {
+        public ProductController(IGenaricRepo<Product> Prod_Repo , IMapper Map ) {
             _ProdRepo = Prod_Repo;  
+            _Mapper = Map;
         }
         [HttpGet]
-        public async Task <ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task <ActionResult<IEnumerable<Product>>> GetAllProduct()
         {
-            
-            var product = await _ProdRepo.GetAllAsync();
-            return Ok( product );
+            var spec = new ProductWithBrandAndCategory();
+            var products = await _ProdRepo.GetAllWithSpesAsync(spec);
+            return Ok(_Mapper.Map<IEnumerable<Product> , IEnumerable<ProductToReturnDto>>(products));
+        }
+        [ProducesResponseType(typeof(ProductToReturnDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [HttpGet ("{id}")]
+        public async Task <ActionResult<ProductToReturnDto>> GetProduct(int id )
+        {
+            var spec = new ProductWithBrandAndCategory(id);
+            var product = await _ProdRepo.GetWithSpec(spec);
+
+            if (product == null)
+            {
+                return NotFound(new ApiResponse(404));
+            }
+            return Ok(_Mapper.Map<Product , ProductToReturnDto>(product));   
         }
 
-        [HttpGet ("{id}")]
-        public async Task <ActionResult<Product>> GetProduct(int id )
-        {
-            var product = await _ProdRepo.GetAsync( id );   
-
-            if( product == null ) {
-                return NotFound(new {message="NotFound"  , statusCode=404});
-            }
-
-            return Ok( product );   
-        }  
+       
     }
 }

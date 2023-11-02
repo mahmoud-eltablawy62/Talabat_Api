@@ -1,5 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Talabat.APIs.Errors;
+using Talabat.APIs.Extensions;
+using Talabat.APIs.Helpers;
+using Talabat.APIs.MiddleWares;
 using Talabat.Core.Repostries.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data;
@@ -13,37 +18,43 @@ namespace Talabat.APIs
             var builder = WebApplication.CreateBuilder(args);
 
             #region Configure Services
-            // Add services to the container.
-
-            builder.Services.AddControllers(); //(ÎÇÕå ÈÇáAPI)
-            // => Register required web APIs Services to the DI container
             
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddControllers();
+
+            builder.Services.SwaggerServ();
 
             builder.Services.AddDbContext<StoreContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+              
 
-            builder.Services.AddScoped(typeof(IGenaricRepo<>) , typeof(GenaricRepo<>));
+            builder.Services.AddServices();
+
             #endregion
+
+
+            
+
+
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionMiddleWares>();
 
             using var scope = app.Services.CreateScope();
 
             var services = scope.ServiceProvider;  
             
             var _dbContext = services.GetRequiredService<StoreContext>();
-            //Ask CLR for creating object from DbContext Explicitly
+            
 
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
             try
             {
-                await _dbContext.Database.MigrateAsync(); //Update-Database
-                await StoreContextSeed.SeedAsync(_dbContext); //Data Seeding
+                await _dbContext.Database.MigrateAsync(); 
+                await StoreContextSeed.SeedAsync(_dbContext); 
             }
             catch (Exception ex)
             {
@@ -52,18 +63,15 @@ namespace Talabat.APIs
             }
 
             #region Configure Kestrel Middelwears
-            // Configure the HTTP request pipeline.
+           
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.SwaggerMiddleWares();
             }
-
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
             app.UseAuthorization();
-
-
             app.MapControllers();
             #endregion
 
