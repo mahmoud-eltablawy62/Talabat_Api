@@ -14,6 +14,13 @@ namespace Talabat.Core.Spacifications
         public Expression<Func<T, bool>> Criteria { get; set; } = null;
         public List<Expression<Func<T, object>>> Includes { get; set; } = new List<Expression<Func<T, object>>>();
 
+        public Expression<Func<T, object>> OrederBy { get; set; } = null;
+
+        public Expression<Func<T, object>> OrderByDesc { get; set; } = null;
+        public int Skip { get ; set ; }
+        public int Take { get ; set ; }
+        public bool IsPagination { get ; set ; }
+
         public BaseSpacification()
         { 
         }
@@ -22,6 +29,23 @@ namespace Talabat.Core.Spacifications
         {
             Criteria = _Criteria;
             Includes = new List<Expression<Func<T, object>>>();
+        }
+
+        public void AddOrderBy (Expression<Func<T, object>> OrederByExp)
+        {
+            OrederBy = OrederByExp;
+        }
+
+        public void AddOrderByDesc(Expression<Func<T, object>> OrederByDescExp)
+        {
+            OrderByDesc = OrederByDescExp;
+        }
+
+        public void Pagination(int skip  , int take)
+        {
+            IsPagination = true;
+            Skip = skip;
+            Take = take;
         }
     }
 }

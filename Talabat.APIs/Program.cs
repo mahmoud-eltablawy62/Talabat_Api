@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Talabat.APIs.Errors;
+using StackExchange.Redis;
 using Talabat.APIs.Extensions;
-using Talabat.APIs.Helpers;
 using Talabat.APIs.MiddleWares;
-using Talabat.Core.Repostries.Contract;
-using Talabat.Repository;
 using Talabat.Repository.Data;
 
 namespace Talabat.APIs
@@ -32,11 +27,13 @@ namespace Talabat.APIs
 
             builder.Services.AddServices();
 
+            builder.Services.AddSingleton<IConnectionMultiplexer>(s =>
+            {
+                var connection = builder.Configuration.GetConnectionString("Redis");
+                return  ConnectionMultiplexer.Connect(connection);
+            });
+
             #endregion
-
-
-            
-
 
             var app = builder.Build();
 
@@ -46,7 +43,7 @@ namespace Talabat.APIs
 
             var services = scope.ServiceProvider;  
             
-            var _dbContext = services.GetRequiredService<StoreContext>();
+            var _dbContext = services.GetRequiredService<StoreContext>(); 
             
 
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();

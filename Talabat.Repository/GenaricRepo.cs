@@ -8,13 +8,14 @@ namespace Talabat.Repository
 {
     public class GenaricRepo<T> : IGenaricRepo<T> where T : BaseEntitiy
     {
+
         private readonly StoreContext _Context;
         
         public GenaricRepo(StoreContext context) { 
               _Context = context;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await _Context.Set<T>().ToListAsync();
         }
@@ -29,7 +30,7 @@ namespace Talabat.Repository
             return await ApplySpac(Spec).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllWithSpesAsync(ISpacifications<T> Spec)
+        public async Task<IReadOnlyList<T>> GetAllWithSpesAsync(ISpacifications<T> Spec)
         {
             return await ApplySpac(Spec).ToListAsync();
         }
@@ -37,6 +38,11 @@ namespace Talabat.Repository
         private IQueryable<T> ApplySpac(ISpacifications<T> Spec)
         {
             return  SpacificationEntity<T>.Query(_Context.Set<T>(), Spec);
+        }
+
+        public async Task<int> GetCountAsync(ISpacifications<T> Spec)
+        {
+            return await ApplySpac(Spec).CountAsync();
         }
     }
 }

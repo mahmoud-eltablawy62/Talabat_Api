@@ -11,11 +11,9 @@ namespace Talabat.Core.Repostries.Contract
     public  interface IGenaricRepo<T> where T : BaseEntitiy
     {
         Task <T?> GetAsync(int id);  
-        Task< IEnumerable <T> > GetAllAsync();
-
-
-        Task<IEnumerable<T>> GetAllWithSpesAsync(ISpacifications<T> Spec);
-
+        Task< IReadOnlyList <T> > GetAllAsync();
+        Task<IReadOnlyList<T>> GetAllWithSpesAsync(ISpacifications<T> Spec);
         Task<T?> GetWithSpec(ISpacifications<T> Spec);
+        Task <int> GetCountAsync(ISpacifications<T> Spec);
     }
 }

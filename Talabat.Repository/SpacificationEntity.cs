@@ -20,6 +20,21 @@ namespace Talabat.Repository
                 query = query.Where(spec.Criteria); 
             }
 
+            if (spec.OrederBy is not null)
+            {
+                query = query.OrderBy(spec.OrederBy);
+            }
+
+            else if(spec.OrderByDesc is not null) 
+            { 
+               query = query.OrderByDescending(spec.OrderByDesc);                
+            }
+
+            if (spec.IsPagination)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+            
             query = spec.Includes.Aggregate(query, (Current, second) => Current.Include(second));
 
             return query;
