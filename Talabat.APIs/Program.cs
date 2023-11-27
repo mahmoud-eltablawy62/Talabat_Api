@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.MiddleWares;
+using Talabat.Core.Entities.Identity;
 using Talabat.Repository.Data;
+using Talabat.Repository.Identity;
 
 namespace Talabat.APIs
 {
@@ -23,8 +26,12 @@ namespace Talabat.APIs
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-              
+            builder.Services.AddDbContext<UserContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
 
+         
             builder.Services.AddServices();
 
             builder.Services.AddSingleton<IConnectionMultiplexer>(s =>
@@ -32,6 +39,10 @@ namespace Talabat.APIs
                 var connection = builder.Configuration.GetConnectionString("Redis");
                 return  ConnectionMultiplexer.Connect(connection);
             });
+
+
+            builder.Services.AddIdentity<Users, IdentityRole>(options => { 
+            }).AddEntityFrameworkStores<UserContext>();
 
             #endregion
 
@@ -44,6 +55,8 @@ namespace Talabat.APIs
             var services = scope.ServiceProvider;  
             
             var _dbContext = services.GetRequiredService<StoreContext>(); 
+
+            var _IdentityContext = services.GetRequiredService<UserContext>();  
             
 
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
@@ -51,7 +64,10 @@ namespace Talabat.APIs
             try
             {
                 await _dbContext.Database.MigrateAsync(); 
-                await StoreContextSeed.SeedAsync(_dbContext); 
+                await StoreContextSeed.SeedAsync(_dbContext);
+                await _IdentityContext.Database.MigrateAsync();
+                var _user_manager = services.GetRequiredService<UserManager<Users>>();
+                await UserContextSeed.UserSeedAsync(_user_manager);
             }
             catch (Exception ex)
             {
