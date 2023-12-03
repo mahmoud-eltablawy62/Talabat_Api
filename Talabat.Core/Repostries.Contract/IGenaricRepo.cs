@@ -15,5 +15,8 @@ namespace Talabat.Core.Repostries.Contract
         Task<IReadOnlyList<T>> GetAllWithSpesAsync(ISpacifications<T> Spec);
         Task<T?> GetWithSpec(ISpacifications<T> Spec);
         Task <int> GetCountAsync(ISpacifications<T> Spec);
+       Task Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }

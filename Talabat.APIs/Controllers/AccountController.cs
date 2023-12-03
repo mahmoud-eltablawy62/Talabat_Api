@@ -13,7 +13,7 @@ namespace Talabat.APIs.Controllers
         private readonly UserManager<Users> _UserManager;
         private readonly SignInManager<Users> _SignInManager;
 
-        public AccountController ( UserManager<Users> UserManager  , SignInManager<Users> SignInManager )
+        public AccountController (UserManager<Users> UserManager  , SignInManager<Users> SignInManager)
         {
             _UserManager = UserManager;
             _SignInManager = SignInManager;
@@ -24,24 +24,15 @@ namespace Talabat.APIs.Controllers
         {
             var user = await _UserManager.FindByEmailAsync(Model.Email);    
             if (user == null)
-            {
-                return Unauthorized(new ApiResponse(401));
-            }
+            {return Unauthorized(new ApiResponse(401));}
             var pass = await _SignInManager.CheckPasswordSignInAsync(user, Model.Password, false);
-
-            if (pass.Succeeded is false)
-            {
-                return Unauthorized(new ApiResponse(401));
-            }
-
+            if (pass.Succeeded is false){return Unauthorized(new ApiResponse(401));}
             return Ok(new UserDto()
             {
                  Display  = user.DisplayName ,
                  Email = user.Email,
                  Token = "okay",
-            }
-            );
-        }
+            });}
 
         [HttpPost("Register")]
         public async Task <ActionResult<UserDto>> Register(SignDto Model)
@@ -60,11 +51,6 @@ namespace Talabat.APIs.Controllers
             Email = user.Email,
             Token = "okay"
             });
-
         }
-
-
-
-
     }
 }

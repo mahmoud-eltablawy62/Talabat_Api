@@ -44,5 +44,16 @@ namespace Talabat.Repository
         {
             return await ApplySpac(Spec).CountAsync();
         }
+
+        public async Task Add(T entity) =>
+            await _Context.AddAsync(entity);
+
+        public void Update(T entity) =>
+             _Context.Update(entity);
+        
+
+        public void Delete(T entity) =>
+            _Context.Remove(entity);
+        
     }
 }
