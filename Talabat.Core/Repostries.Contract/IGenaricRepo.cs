@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Talabat.Core.Entities;
 using Talabat.Core.ISpacifications;
+using Talabat.Repository.Identity.Oreder_Aggregate;
 
 namespace Talabat.Core.Repostries.Contract
 {
@@ -18,5 +19,6 @@ namespace Talabat.Core.Repostries.Contract
        Task Add(T entity);
         void Update(T entity);
         void Delete(T entity);
+        
     }
 }

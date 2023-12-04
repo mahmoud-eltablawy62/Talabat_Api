@@ -3,6 +3,7 @@ using Talabat.Core.Entities;
 using Talabat.Core.ISpacifications;
 using Talabat.Core.Repostries.Contract;
 using Talabat.Repository.Data;
+using Talabat.Repository.Identity.Oreder_Aggregate;
 
 namespace Talabat.Repository
 {
@@ -54,6 +55,7 @@ namespace Talabat.Repository
 
         public void Delete(T entity) =>
             _Context.Remove(entity);
-        
+
+       
     }
 }

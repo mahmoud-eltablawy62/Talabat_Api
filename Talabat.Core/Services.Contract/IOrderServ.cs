@@ -12,7 +12,8 @@ namespace Talabat.Core.Services.Contract
     public interface IOrderServ
     {
         Task<Orders?> CreateOrderAsync(string Basket_iD, string buyerEmail, int deleivryMethod, Address Add);
-        Task<IReadOnlyList<Order>> OrderAsync(string buyerEmail);
-        Task<Orders> getOrderById(int id , string buyerEmail);
+        Task<IReadOnlyList<Orders>> OrderAsync(string buyerEmail);
+        Task<Orders?> getOrderById(int id , string buyerEmail);
+        Task<IReadOnlyList<DelievryType>> GetDelievryType();
     }
 }
