@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Talabat.APIs.Dtos;
 using Talabat.Core.Entities;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Entities.Identity.Oreder_Aggregate;
 using Talabat.Repository.Identity.Oreder_Aggregate;
 
@@ -20,6 +21,9 @@ namespace Talabat.APIs.Helpers
             CreateMap<BasketItemDto, BasketItem>();
 
             CreateMap<AddressDto, Address>();
+            CreateMap <Adress , AddressDto>().ReverseMap();  
+
+            CreateMap<Core.Entities.Identity.Adress , AddressDto>();    
 
             CreateMap<Orders, OrderToReturnDto>().
                 ForMember(d => d.DelievryType, S => S.MapFrom(S => S.DelievryType.Name)).

@@ -12,7 +12,7 @@ namespace Talabat.APIs.Dtos
         public string Street { get; set; }
         [Required]
         public string City { get; set; }
-        [Required]
+        
         public string State { get; set; }
     }
 }

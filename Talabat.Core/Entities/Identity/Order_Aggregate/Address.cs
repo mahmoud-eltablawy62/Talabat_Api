@@ -22,6 +22,6 @@ namespace Talabat.Repository.Identity.Oreder_Aggregate
         public string Last_Name { get; set; }     
         public string Street { get; set; }  
         public string City { get; set; }
-        public string State { get; set; }
+        public string? State { get; set; }
     }
 }

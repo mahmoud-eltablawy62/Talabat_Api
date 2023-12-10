@@ -18,7 +18,9 @@ namespace Talabat.APIs.MiddleWares
         public async Task InvokeAsync(HttpContext context)
         {
             try { 
+
               await Next.Invoke(context);
+
             }
             catch(Exception ex) { 
             

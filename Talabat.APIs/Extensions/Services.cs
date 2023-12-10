@@ -15,7 +15,7 @@ namespace Talabat.APIs.Extensions
             Services.AddScoped(typeof(IGenaricRepo<>), typeof(GenaricRepo<>));
             Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             Services.AddScoped(typeof(IOrderServ), typeof(ServiceOrder));
-
+            Services.AddScoped(typeof(IProductServ), typeof(ProductService));
             Services.AddScoped(typeof(IBasketRepo), typeof(BasketRepo));
             Services.AddAutoMapper(typeof(MappingProfile));
 

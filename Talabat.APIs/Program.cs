@@ -4,8 +4,10 @@ using StackExchange.Redis;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.MiddleWares;
 using Talabat.Core.Entities.Identity;
+using Talabat.Core.Services.Contract;
 using Talabat.Repository.Data;
 using Talabat.Repository.Identity;
+using Talabat.Service;
 
 namespace Talabat.APIs
 {
@@ -41,8 +43,7 @@ namespace Talabat.APIs
             });
 
 
-            builder.Services.AddIdentity<Users, IdentityRole>(options => { 
-            }).AddEntityFrameworkStores<UserContext>();
+            builder.Services.AddIdentitiyService(builder.Configuration);
 
             #endregion
 
@@ -84,8 +85,15 @@ namespace Talabat.APIs
             app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthorization();
+         
             app.MapControllers();
+
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+            
+
             #endregion
 
             app.Run();
