@@ -12,12 +12,13 @@ namespace Talabat.APIs.Extensions
     public static class Services 
     {
         public static IServiceCollection AddServices( this IServiceCollection Services) {
+            Services.AddScoped(typeof(IPayementServices) , typeof(PaymentServices));
             Services.AddScoped(typeof(IGenaricRepo<>), typeof(GenaricRepo<>));
             Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             Services.AddScoped(typeof(IOrderServ), typeof(ServiceOrder));
             Services.AddScoped(typeof(IProductServ), typeof(ProductService));
             Services.AddScoped(typeof(IBasketRepo), typeof(BasketRepo));
-            Services.AddAutoMapper(typeof(MappingProfile));
+            Services.AddAutoMapper(typeof(MappingProfile));     
 
             Services.Configure<ApiBehaviorOptions>(options =>
             {

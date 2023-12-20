@@ -15,16 +15,22 @@ namespace Talabat.APIs.Helpers
                 .ForMember(d => d.Brand, o => o.MapFrom(S => S.Brand.Name))
                 .ForMember(d => d.Category, o => o.MapFrom(S => S.Category.Name))
                 .ForMember(d => d.PictureUrl, o => o.MapFrom<ProductPictureUrlResolver>());
+            //var address = _mapper.Map <AddressDto,Address>(order.Addres)
+            //CreateMap<AddressDto, Address>().ReverseMap();
+
+            //CreateMap<Adress, AddressDto>().ReverseMap();
+
+            //CreateMap<Core.Entities.Identity.Adress, AddressDto>();
+
+            CreateMap<AddressDto,Address>();
+            CreateMap<Core.Entities.Identity.Adress,AddressDto>().ReverseMap();
+
 
             CreateMap<CustomerBasketDto , CustomerBasket >();
 
             CreateMap<BasketItemDto, BasketItem>();
 
-            CreateMap<AddressDto, Address>();
-            CreateMap <Adress , AddressDto>().ReverseMap();  
-
-            CreateMap<Core.Entities.Identity.Adress , AddressDto>();    
-
+            
             CreateMap<Orders, OrderToReturnDto>().
                 ForMember(d => d.DelievryType, S => S.MapFrom(S => S.DelievryType.Name)).
                 ForMember(d => d.Cost, s => s.MapFrom(s => s.DelievryType.Cost));

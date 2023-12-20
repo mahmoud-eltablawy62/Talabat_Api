@@ -10,8 +10,8 @@ namespace Talabat.Core.Repostries.Contract
 {
      public interface IBasketRepo
     {
-        Task <CustomerBasket> GetBasketAsync (string id);
-        Task<CustomerBasket> UpdateBasketAsync(CustomerBasket Basket);
+        Task <CustomerBasket?>GetBasketAsync(string id);
+        Task<CustomerBasket?>UpdateBasketAsync(CustomerBasket Basket);
         Task<bool> DeleteBasketAsync(string id);
     }
 }

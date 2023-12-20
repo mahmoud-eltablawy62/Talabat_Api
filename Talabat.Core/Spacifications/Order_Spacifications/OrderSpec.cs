@@ -24,6 +24,8 @@ namespace Talabat.Core.Spacifications.Order_Spacifications
            
         }
 
+        }
+
 
     }
-}
+

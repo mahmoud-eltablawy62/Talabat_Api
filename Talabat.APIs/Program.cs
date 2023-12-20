@@ -19,6 +19,14 @@ namespace Talabat.APIs
 
             #region Configure Services
             
+            //builder.Services.AddCors(
+            //    options => {
+            //        options.AddPolicy("MyPolicy", options =>
+            //    {
+            //        options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+
+            //    });
+            //    });
 
             builder.Services.AddControllers();
 
@@ -87,7 +95,7 @@ namespace Talabat.APIs
             app.UseStaticFiles();
          
             app.MapControllers();
-
+            //app.UseCors("MyPolicy");
 
             app.UseAuthentication();
 

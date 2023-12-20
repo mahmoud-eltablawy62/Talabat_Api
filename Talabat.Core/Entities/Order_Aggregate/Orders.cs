@@ -10,25 +10,25 @@ namespace Talabat.Core.Entities.Identity.Oreder_Aggregate
     public class Orders : BaseEntitiy
     {
         public Orders() { } 
-        public Orders(string buyerEmail, Address address, DelievryType delievryType, ICollection<OrderItem> items, decimal sub_Collection)
+        public Orders(string buyerEmail, Address address, DelievryType delievryType, ICollection<OrderItem> items, decimal sub_Collection, string paymentId)
         {
             BuyerEmail = buyerEmail;
             Address = address;
             DelievryType = delievryType;
             Items = items;
             Sub_Collection = sub_Collection;
+            PaymentId = paymentId;
         }
 
         public string BuyerEmail { set; get; }  
-        public  DateTimeOffset DateTime { set; get; }   = DateTimeOffset.UtcNow;
+        public  DateTimeOffset DateTime { set; get; } = DateTimeOffset.UtcNow;
         public OrderStatus Status { set; get; } = OrderStatus.Pending;
         public Address Address { set; get; }
-        //public int DelievryTypeId { get; set; }
         public DelievryType DelievryType { set; get;}
         public ICollection<OrderItem> Items { set; get;}  = new HashSet<OrderItem>();   
         public decimal Sub_Collection { get; set; }
         public decimal Total_Collection() => Sub_Collection + DelievryType.Cost ;
-        public string PaymentId { set; get; } = "";
+        public string PaymentId { set; get; }
 
     }
 }

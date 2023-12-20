@@ -25,10 +25,10 @@ namespace Talabat.Repository
             return  await _database.KeyDeleteAsync(id);
         }
 
-        public async Task<CustomerBasket> GetBasketAsync(string id)
+        public async Task<CustomerBasket?> GetBasketAsync(string basketId)
         {
-            var Basket = await _database.StringGetAsync(id);
-            return Basket.IsNull ? null : JsonSerializer.Deserialize<CustomerBasket>(Basket);
+            var basket = await _database.StringGetAsync(basketId);
+            return basket.IsNull ? null : JsonSerializer.Deserialize<CustomerBasket?>(basket);
         }
 
         public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket Basket)

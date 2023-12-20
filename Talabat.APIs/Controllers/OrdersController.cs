@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
+using Stripe.Climate;
 using System.Security.Claims;
 using Talabat.APIs.Dtos;
 using Talabat.APIs.Errors;
@@ -24,17 +26,35 @@ namespace Talabat.APIs.Controllers
             _mapper = mapper;
              
         }
+        //[HttpPost]
+        //public async Task<ActionResult<OrderToReturnDto>> CreateOrder(OrderDto order)
+        //{
+        //    var email = User.FindFirstValue(ClaimTypes.Email);
+        //    var address = _mapper.Map <AddressDto,Address>(order.Addres);
+        //    var order_As = await _Serv.CreateOrderAsync(email,order.Baasket_ID,order.Deleivry_Method,address);
+
+        //    if (order_As == null) {
+        //        return BadRequest(new ApiResponse(400));
+        //    }
+        //    return Ok(_mapper.Map<Orders,OrderToReturnDto>(order_As));
+        //}
+
+        [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpPost]
-        public async Task<ActionResult<OrderToReturnDto>> CreateOrder(OrderDto order)
+        public async Task<ActionResult<OrderToReturnDto>> CreateOrder(OrderDto orderDto)
         {
-            var BuyerEmail = User.FindFirstValue(ClaimTypes.Email);
-            var address = _mapper.Map < AddressDto, Address>(order.Addres);
-            var order_As = await _Serv.CreateOrderAsync(order.Baasket_ID, BuyerEmail, order.Deleivry_Method, address);
-            if (order_As == null) {
-                return BadRequest(new ApiResponse(400));
-            }
-            return Ok(_mapper.Map<OrderToReturnDto>(order_As));
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+            var address = _mapper.Map<AddressDto,Address>(orderDto.Addres);
+
+            var order = await _Serv.CreateOrderAsync(buyerEmail,orderDto.Baasket_ID,orderDto.Deleivry_Method,address);
+
+            if (order is null) return BadRequest(new ApiResponse(400));
+
+            return Ok(_mapper.Map<Orders, OrderToReturnDto>(order));
         }
+
+
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrderByBuyerName()
         {
